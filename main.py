@@ -1,12 +1,14 @@
 from window import Window
 from line import Line, Point
+from cell import Cell
 
 def main():
     win = Window(800, 600)
-    p1 = Point(0, 0)
-    p2 = Point(100, 100)
-    line = Line(p1, p2)
-    win.draw_line(line, "purple")
+    cell = Cell(True, False, True, True, 2, 2, 102, 102, win)
+    cell2 = Cell(False, True, True, True, 102, 2, 204, 102, win)
+    cell.draw("purple")
+    cell2.draw("green")
+    cell.draw_move(cell2)
     win.wait_for_close()
 
 main()
