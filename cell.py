@@ -1,33 +1,56 @@
+from line import Line, Point
 
 class Cell:
-    def __init__(self, left, right, top, bottom, x1, y1, x2, y2, win):
-        self.has_left_wall = left
-        self.has_right_wall = right
-        self.has_top_wall = top
-        self.has_bottom_wall = bottom
-        self.__x1 = x1
-        self.__y1 = y1
-        self.__x2 = x2
-        self.__y2 = y2
-        self.canvas = win.canvas
+    def __init__(self, win=None):
+        self.has_left_wall = True
+        self.has_right_wall = True
+        self.has_top_wall = True
+        self.has_bottom_wall = True
+        self._x1 = None
+        self._y1 = None
+        self._x2 = None
+        self._y2 = None
+        self._win = win
+        self.visited = False
 
-    def draw(self, fill_color):
+    def draw(self, x1, y1, x2, y2):
+        self._x1 = x1
+        self._y1 = y1
+        self._x2 = x2
+        self._y2 = y2
         if self.has_left_wall:
-            self.canvas.create_line(self.__x1, self.__y1, self.__x1, self.__y2, fill=fill_color, width=2)
+            line = Line(Point(x1, y1), Point(x1, y2))
+            self._win.draw_line(line)
+        else:
+            line = Line(Point(x1, y1), Point(x1, y2))
+            self._win.draw_line(line, fill_color="white")
         if self.has_right_wall:
-            self.canvas.create_line(self.__x2, self.__y1, self.__x2, self.__y2, fill=fill_color, width=2)
+            line = Line(Point(x2, y1), Point(x2, y2))
+            self._win.draw_line(line)
+        else:
+            line = Line(Point(x2, y1), Point(x2, y2))
+            self._win.draw_line(line, fill_color="white")
         if self.has_top_wall:
-            self.canvas.create_line(self.__x1, self.__y1, self.__x2, self.__y1, fill=fill_color, width=2)
+            line = Line(Point(x1, y1), Point(x2, y1))
+            self._win.draw_line(line)
+        else:
+            line = Line(Point(x1, y1), Point(x2, y1))
+            self._win.draw_line(line, fill_color="white")
         if self.has_bottom_wall:
-            self.canvas.create_line(self.__x1, self.__y2, self.__x2, self.__y2, fill=fill_color, width=2)
+            line = Line(Point(x1, y2), Point(x2, y2))
+            self._win.draw_line(line)
+        else:
+            line = Line(Point(x1, y2), Point(x2, y2))
+            self._win.draw_line(line, fill_color="white")
 
     def draw_move(self, to_cell, undo=False):
-        start_x = (self.__x2 - self.__x1) // 2 + self.__x1
-        start_y = (self.__y2 - self.__y1) // 2 + self.__y1
-        end_x = (to_cell.__x2 - to_cell.__x1) // 2 + to_cell.__x1
-        end_y = (to_cell.__y2 - to_cell.__y1) // 2 + to_cell.__y1
+        start_x = (self._x2 - self._x1) // 2 + self._x1
+        start_y = (self._y2 - self._y1) // 2 + self._y1
+        end_x = (to_cell._x2 - to_cell._x1) // 2 + to_cell._x1
+        end_y = (to_cell._y2 - to_cell._y1) // 2 + to_cell._y1
+        line = Line(Point(start_x, start_y), Point(end_x, end_y))
         if undo:
-            self.canvas.create_line(start_x, start_y, end_x, end_y, fill="gray", width=2)
+            self._win.draw_line(line, fill_color="gray")
         else:
-            self.canvas.create_line(start_x, start_y, end_x, end_y, fill="red", width=2)
+            self._win.draw_line(line, fill_color="red")
         
